@@ -1,5 +1,5 @@
 [project]
-name = "grab_em"
+name = "grab_cli"
 description = "Light-weight web scraper to download specific types of media from static sites"
 readme = "README.md"
 license = {"text" = "MIT"}
@@ -16,7 +16,7 @@ classifiers = [
 ]
 
 [project.scripts]
-grab = "grab_em.cli:execute_via_cli"
+grab = "grab_cli.cli:execute_via_cli"
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]
@@ -24,4 +24,4 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["grab_em"]
+include = ["grab_cli"]

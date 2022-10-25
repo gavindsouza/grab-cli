@@ -1,6 +1,6 @@
 import sys
-from grab_em.hound import Site, Scraper, HyperlinkParser, bulk_download
-from grab_em.utils import build_url, show_help, track_exec_time
+from grab_cli.hound import Site, Scraper, HyperlinkParser, bulk_download
+from grab_cli.utils import build_url, show_help, track_exec_time
 
 
 def execute_via_cli():
