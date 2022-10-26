@@ -1,7 +1,5 @@
 import shutil
-import sys
 from html.parser import HTMLParser
-from http.client import RemoteDisconnected
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from urllib.parse import urlparse
@@ -58,12 +56,14 @@ class HyperlinkParser(HTMLParser):
 
 
 def resilient_request(url: str, retries: int = 3):
+    e = None
     for _ in range(retries):
         try:
             return urlopen(url)
-        except RemoteDisconnected:
-            continue
-    raise RemoteDisconnected
+        except Exception as err:
+            e = err
+    if e:
+        raise e
 
 
 def download_file(target: str, path: str):
@@ -83,35 +83,3 @@ def bulk_download(urls: list[str], download_location: str, metadata=None):
     job_kwargs = [(url, location / url.rsplit("/", 1)[-1]) for url in urls]
 
     cpu_pool.starmap(download_file, job_kwargs)
-
-
-if __name__ == "__main__":
-    url = sys.argv[1]
-    pull_type = sys.argv[2]
-
-
-    extns = {
-        "videos": [".mp4", ".mkv", ".avi", ".mov", ".wmv", ".flv", ".webm"],
-        "images": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg"],
-    }
-
-    if pull_type == "*":
-        extns = [extn for extn_list in extns.values() for extn in extn_list]
-    else:
-        extns = extns[pull_type]
-
-    target = Site(url)
-    scraper = Scraper(target)
-    scraper.fetch(scraper.target.url)
-
-    parser = HyperlinkParser(accepted_extns=extns)
-    parser.feed(scraper.feed)
-
-    target_folder = "_".join(url.rsplit("/", 2)[-2:])
-    files_to_download = [f"{target.location.scheme}:{x}" for x in parser.filtered_links]
-
-    bulk_download(
-        urls=files_to_download,
-        download_location=target_folder,
-        metadata=f"Scraped all {extns} files from {url}",
-    )

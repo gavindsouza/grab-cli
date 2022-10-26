@@ -1,0 +1,27 @@
+[project]
+name = "grab_em"
+description = "Light-weight web scraper to download specific types of media from static sites"
+readme = "README.md"
+license = {"text" = "MIT"}
+version = "0.0.1"
+requires-python = ">=3.7"
+authors = [
+    { name = "Gavin D'souza", email = "gavin18d@gmail.com" },
+]
+classifiers = [
+    "Environment :: Console",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: User Interfaces",
+]
+
+[project.scripts]
+grab = "grab_em.cli:execute_via_cli"
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["grab_em"]
